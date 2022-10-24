@@ -13,21 +13,21 @@ class TestUtils(unittest.TestCase):
     def setUpClass(cls):
         cls.seed = np.random.seed(2)
         cls.matrix = np.random.rand(5,5)
-        cls.toy_data = pd.read_csv('toy_data.csv', sep=',', header=None)
+        cls.toy_file = 'toy_file.csv'
+        np.savetxt(cls.toy_file, cls.matrix, delimiter=',')
+        cls.toy_data = pd.read_csv(cls.toy_file, sep=',', header=None)
         cls.dims = cls.toy_data.shape
-        cls.toy_file = np.savetxt('toy_file.csv', cls.matrix, delimiter=',')
-        cls.toy_csv = pd.read_csv('toy_file.csv', sep=',', header=None)
 
     @classmethod
     def tearDownClass(cls):
         cls.seed =None
         cls.matrix = None
+        os.remove(cls.toy_file)
+        cls.toy_file = None
         cls.toy_data = None
         cls.dims = None
-        cls.toy_file = None
-        cls.toy_csv = None
 
-        
+
     # tests for get_random_matrix()
     def test_get_random_matrix(self):
         # positive test: test that the matrix returned is correct
@@ -35,23 +35,23 @@ class TestUtils(unittest.TestCase):
         self.assertIsNone(np.testing.assert_array_equal(dpr_matrix,
                                                         self.matrix))
 
-        # # negative test: test that the matrix returned is wrong
-        # self.assertIsFalse(np.not_equal(dpr_matrix, self.matrix))
+        # negative test: test that the matrix returned is wrong
+        np.random.seed(7)
+        wrong_matrix = np.random.rand(5,5)
+        with self.assertRaises(AssertionError):
+            np.testing.assert_array_equal(dpr_matrix, wrong_matrix)
 
         # error handling:
 
 
     def test_get_file_dimensions(self):
         # positive test: test that the correct dimensions are returned
-        self.assertEqual(dpr.get_file_dimensions('toy_data.csv'), self.dims)
+        self.assertEqual(dpr.get_file_dimensions('toy_file.csv'), self.dims)
 
-        ## negative test: test that the wrong dimensions are returned
-        # wrong_dims = (1,1)
-        # self.assertNotEqual((dpr.get_file_dimensions('toy_data.csv'),
-        #                      wrong_dims)
-        
+        # negative test: test that the wrong dimensions are returned
+        self.assertNotEqual(dpr.get_file_dimensions('toy_file.csv'), (1,1))
+
         # error handling: test that FileNotFoundError is handled
-        ## why does this work?
         with self.assertRaises(FileNotFoundError):
             dpr.get_file_dimensions('dne.csv')
 
@@ -61,9 +61,15 @@ class TestUtils(unittest.TestCase):
         dpr.write_matrix_to_file(5, 5, 'test_data.csv')        
         test_data = pd.read_csv('test_data.csv', sep=',', header=None)
         self.assertIsNone(np.testing.assert_array_equal(test_data,
-                                                        self.toy_csv))
+                                                        self.toy_data))
+        os.remove('test_data.csv')
+
 
         # negative test: test that the wrong matrix is written
+        np.random.seed(7)
+        wrong_matrix = np.random.rand(5,5)
+        with self.assertRaises(AssertionError):
+            np.testing.assert_array_equal(test_data, wrong_matrix)
 
 
         # error handling: is wrong file type handled
