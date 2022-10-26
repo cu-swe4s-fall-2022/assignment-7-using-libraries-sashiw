@@ -1,0 +1,8 @@
+name: libs
+channels:
+  - defaults
+dependencies:
+  - pycodestyle
+  - numpy
+  - wget
+  - matplotlib
