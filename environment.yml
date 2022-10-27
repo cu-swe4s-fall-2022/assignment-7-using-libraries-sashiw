@@ -4,5 +4,6 @@ channels:
 dependencies:
   - pycodestyle
   - numpy
+  - pandas
   - wget
   - matplotlib
