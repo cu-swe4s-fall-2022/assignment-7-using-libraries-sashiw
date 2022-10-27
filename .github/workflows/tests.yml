@@ -45,4 +45,4 @@ jobs:
           activate-environment: libs
           environment-file: environment.yml
       - run: |
-          python -m unittest test_data_processor
+          python -m unittest test_data_processor.py
