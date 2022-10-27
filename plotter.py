@@ -24,7 +24,7 @@ def main():
     # make scatter plot
     for species in set(iris['species']):
         iris_subset = iris[iris['species'] == species]
-        scatter_plot =ax2.scatter(iris_subset['petal_length'],
+        scatter_plot = ax2.scatter(iris_subset['petal_length'],
                                    iris_subset['petal_width'],
                                    label=species, s=15)
 
@@ -37,13 +37,13 @@ def main():
     # left box plot
     axes[0].boxplot(iris[measurement_names], labels=measurement_names)
     axes[0].set_ylabel('cm')
-    
+
     # right scatter plot
     for species in set(iris['species']):
         iris_subset = iris[iris['species'] == species]
-        scatter_plot =axes[1].scatter(iris_subset['petal_length'],
-                                      iris_subset['petal_width'],
-                                      label=species, s=15)
+        scatter_plot = axes[1].scatter(iris_subset['petal_length'],
+                                       iris_subset['petal_width'],
+                                       label=species, s=15)
 
     axes[1].legend()
     axes[1].set_xlabel('petal_length')
@@ -55,6 +55,7 @@ def main():
         axes[i].spines['right'].set_visible(False)
 
     fig3.savefig('multi_panel_figure.png')
+
 
 if __name__ == '__main__':
     main()
